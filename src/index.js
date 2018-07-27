@@ -1,38 +1,25 @@
-var express = require('express');
-var multer  = require('multer');
-var bodyParser = require('body-parser');
-var cors = require('cors');
+const http =  require('http');
+
 const config = require('./config');
+const routes = require('./assets/js/routes');
+let RequestHandler = require('./assets/js/requsetHandler');
 
-var upload = multer({ dest: config.uploadsDir });
-
-var app = express();
-app.use(cors);
-
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-
-// respond with "hello world" when a GET request is made to the homepage
-app.get('/', function (req, res) {
-    console.log('root get');
-  	res.send("Music REST API");
-});
-
-app.post('/', function (req, res) {
-    res.sendStatus(403);
-});
-
-app.post('/uploadSong', upload.array('songs', 20), function(req, res, next) {
-    // res.setHeader('Access-Control-Allow-Origin');
-    // res.end();
-    console.log(req.file);
-});
-
-// app.post('/uploadSong', function(req, res) {
-//     console.log(req.files);
-// });
-
-
-app.listen(config.port, () => {
+//create a server object:
+http.createServer(function (req, res) {
+    let requsetHandler = new RequestHandler();
+    if(req.method == 'GET') {   // GET reqquests
+        switch(req.url) {
+            case routes.GET.root:
+                requsetHandler.sendApiInfo(req, res);
+                break;
+        }
+    } else {    // POST requests
+        switch(req.url) {
+            case routes.POST.uploadSongs: 
+                requsetHandler.storeSongs(req, res);
+                break;
+        }
+    }
+}).listen(config.port, () => {
     console.log(`Server is running on http://localhost:${config.port}`);
-});
+}); //the server object listens on port 8080

@@ -1,5 +1,5 @@
 const config = {
-    port: 4343,
+    port: 7991,
     uploadsDir: 'D:/git/musicRESTAPI/uploads'
 }
 
