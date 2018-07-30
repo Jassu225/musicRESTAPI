@@ -15,7 +15,7 @@ http.createServer(function (req, res) {
         }
     } else {    // POST requests
         switch(req.url) {
-            case routes.POST.uploadSongs: 
+            case routes.POST.uploadSong: 
                 requsetHandler.storeSongs(req, res);
                 break;
         }

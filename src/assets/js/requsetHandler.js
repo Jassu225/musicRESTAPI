@@ -9,6 +9,7 @@ const Utils = require('./utils');
 const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
+    'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept",
     'Access-Control-Max-Age': 2592000, // 30 days
     /** add other headers as per requirement */
 };
@@ -23,34 +24,65 @@ class RequestHandler {
     }
     // POST Handlers
     storeSongs(req, res) {
-        // console.log(req.);
-        // req.files.forEach(file => {
-        //     fs.writeFile(path.join(config.uploadsDir, file.name), 'Hello Node.js', (err) => {
-        //         if (err) throw err;
-        //         console.log('The file has been saved!');
-        //     });
-        // });
+        
         let body = '';
+        // console.log(req);
         req.on('data', chunk => {
             body += chunk.toString(); // convert Buffer to string
         });
         req.on('end', () => {
             // props {name, size, type, binaryString}
-            let file = JSON.parse(body);
-            console.log(file["name"]);
+            // console.log(body.name);
+            let chunk;
             // console.log(body);
-            // res.writeHead(200, headers);
-            // res.end('ok');
-            fs.writeFile(
-                path.join(config.uploadsDir, `${file["name"]}.${Utils.getExtension(file["type"])}`),
-                file["binaryString"],
-                (err) => {
-                    if(err) throw err;
-                    res.writeHead(200, headers);
-                    res.end('File has been saved');
-                }
-            );
+            try {
+                chunk = JSON.parse(body);
+                
+            } catch (ex) {
+                // maybe preflight check (only for xhr request)
+                res.writeHead(200, headers);
+                res.end(ex.Message);
+                return;
+            }
+
+            console.log(chunk["name"]);
+            this.store(chunk, res);
         });
+    }
+
+    store(chunk, res) {
+        
+        if(chunk["isFirst"]) {
+            console.log(chunk["isFirst"]);
+            this.storeInNewFile(chunk, res);
+        } else {
+            console.log(chunk["isFirst"]);
+            this.appendToExistingFile(chunk, res);
+        }
+    }
+
+    storeInNewFile(chunk, res) {
+        fs.writeFile(
+            path.join(config.uploadsDir, chunk["name"]),
+            chunk["base64Data"],
+            (err) => {
+                if(err) throw err;
+                res.writeHead(200, headers);
+                res.end('Chunk has been saved');
+            }
+        );
+    }
+
+    appendToExistingFile(chunk, res) {
+        fs.appendFile(
+            path.join(config.uploadsDir, chunk["name"]),
+            chunk["base64Data"],
+            (err) => {
+                if(err) throw err;
+                res.writeHead(200, headers);
+                res.end('Chunk has been saved');
+            }
+        );
     }
 }
 

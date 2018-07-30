@@ -3,7 +3,7 @@ const routes = {
         root: '/'
     },
     POST: {
-        uploadSongs: '/uploadSongs'
+        uploadSong: '/uploadSong'
     }
 }
 
