@@ -1,9 +1,11 @@
 const routes = {
     GET: {
-        root: '/'
+        root: '/',
+        getSongs: '/getSongs'
     },
     POST: {
-        uploadSong: '/uploadSong'
+        uploadSong: '/uploadSong',
+        uploadComplete: '/uploadComplete'
     }
 }
 

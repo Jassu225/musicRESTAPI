@@ -3,7 +3,8 @@ node_modules/
 dist/
 npm-debug.log
 yarn-error.log
-uploads
+uploads/*
+databases/*
 
 # Editor directories and files
 .idea

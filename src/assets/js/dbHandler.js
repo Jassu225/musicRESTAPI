@@ -1,40 +1,51 @@
-import LinvoDB from 'linvodb3';
-import path from 'path';
-import util from 'util';
-import leveljs from 'level-js';
+// Type 3: Persistent datastore with automatic loading
+const Datastore = require('nedb');
+const path = require('path');
+const util = require('util');
+const config = require('./../../config');
+const Promise = require('bluebird');
 
-import Schemas from './dbSchemas';
+// const {Schemas} = require('./dbSchemasAndObjects');
 
-LinvoDB.defaults.store = { db: leveljs}; // Comment out to use LevelDB instead of level-js
-// Set dbPath - this should be done explicitly and will be the dir where each model's store is saved
-LinvoDB.dbPath = path.join(process.cwd(), './data', './db');
+let songsDB = new Datastore({ filename: path.join(config.databaseDir, 'songs.db'), autoload: true });
+let albumsDB = new Datastore({ filename: path.join(config.databaseDir, 'albums.db'), autoload: true });
+// You can issue commands right away
 
 
-export default class DBHandler {
-    songsDB;
-    albumsDB;
-    DBHandler() {
-        this.songsDB = new LinvoDB("song", Schemas.song());
-        this.songsDB.ensureIndex({
-            fieldName: 'path',
-            unique: true
+songsDB = Promise.promisifyAll(songsDB);
+albumsDB = Promise.promisifyAll(songsDB);
+
+class DBHandler {
+
+    static async addSong(song) {
+        let data;
+        await songsDB.insertAsync(song)
+        .then((song) => {
+            // if(err) console.log(err);
+            // console.log(song);
+            data = song;
         });
-
-        this.albumsDB = new linvodb("album", Schemas.album());
-            this.albumsDB.ensureIndex({
-            fieldName: 'title',
-            unique: true
-        });
-
-        this.songsDB = util.promisify(this.songsDB);
-        this.albumsDB = util.promisify(this.albumsDB);
+        return data;
     }
 
-    async addSong(song) {
-        return await this.songsDB.insert(song);
+    static async addAlbum(album) {
+        let data;
+        await albumsDB.insertAsync(album)
+        .then(album => {
+            data =  album;
+        });
+        return data;
     }
 
-    async addAlbum(album) {
-        return await this.albumsDB.insert(album);
+    static async getSongs() {
+        let data;
+        await songsDB.findAsync({})
+        .then(docs => {
+            // console.log(docs);
+            data = docs;
+        });
+        return data;
     }
 }
+
+module.exports = DBHandler;
