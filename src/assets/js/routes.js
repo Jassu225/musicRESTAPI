@@ -1,7 +1,8 @@
 const routes = {
     GET: {
         root: '/',
-        getSongs: '/getSongs'
+        getSongs: '/getSongs',
+        uploads: '/uploads' // static serving 
     },
     POST: {
         uploadSong: '/uploadSong',

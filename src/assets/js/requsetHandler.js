@@ -3,6 +3,7 @@ const path = require('path');
 const Promise = require('bluebird');
 const qs = require('querystring');
 const fs = require('fs');
+const url = require('url');
 const config = require('../../config');
 const Utils = require('./utils');
 const BusinessLayer = require('./BusinessLayer');
@@ -13,6 +14,24 @@ const headers = {
     'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept",
     'Access-Control-Max-Age': 2592000, // 30 days
     /** add other headers as per requirement */
+};
+
+// maps file extention to MIME types
+const mimeType = {
+    '.ico': 'image/x-icon',
+    '.html': 'text/html',
+    '.js': 'text/javascript',
+    '.json': 'application/json',
+    '.css': 'text/css',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.wav': 'audio/wav',
+    '.mp3': 'audio/mpeg',
+    '.svg': 'image/svg+xml',
+    '.pdf': 'application/pdf',
+    '.doc': 'application/msword',
+    '.eot': 'appliaction/vnd.ms-fontobject',
+    '.ttf': 'aplication/font-sfnt'
 };
 
 class RequestHandler {
@@ -63,6 +82,27 @@ class RequestHandler {
         res.writeHead(200, headers);
         res.write(JSON.stringify({songs}));
         res.end();
+    }
+
+    //static serving
+    static getSong(req, res, fileName) {
+        let fullPath = path.join(config.uploadsDir, fileName);
+        console.log(fullPath);
+        fs.readFile(
+            fullPath,
+            function(err, data) {
+                if(err){
+                  res.statusCode = 500;
+                  res.end(`Error getting the file: ${err}.`);
+                } else {
+                  // based on the URL path, extract the file extention. e.g. .js, .doc, ...
+                  const ext = path.parse(fullPath).ext;
+                  // if the file is found, set Content-type and send data
+                  res.setHeader('Content-type', mimeType[ext] || 'text/plain' );
+                  res.end(data);
+                }
+            }
+        );
     }
     // POST Handlers
     static storeSongs(req, res) {
