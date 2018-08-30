@@ -23,6 +23,9 @@ http.createServer(function (req, res) {
             case routes.GET.getSongs:
                 RequestHandler.getSongs(req, res);
                 break;
+            case routes.GET.getAlbums:
+                RequestHandler.getAlbums(req, res);
+                break;
             default:
                 if(routeUrl === routes.GET.uploads) {
                     // static serving

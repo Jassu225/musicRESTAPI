@@ -7,13 +7,18 @@ const Promise = require('bluebird');
 
 // const {Schemas} = require('./dbSchemasAndObjects');
 
-let songsDB = new Datastore({ filename: path.join(config.databaseDir, 'songs.db'), autoload: true });
-let albumsDB = new Datastore({ filename: path.join(config.databaseDir, 'albums.db'), autoload: true });
+let songsDB = new Datastore({ filename: path.join(config.databaseDir, 'songs.db')});
+let albumsDB = new Datastore({ filename: path.join(config.databaseDir, 'albums.db')});
+
+// You need to load each database (here we do it asynchronously)
+songsDB.loadDatabase();
+albumsDB.loadDatabase();
+
 // You can issue commands right away
 
 
 songsDB = Promise.promisifyAll(songsDB);
-albumsDB = Promise.promisifyAll(songsDB);
+albumsDB = Promise.promisifyAll(albumsDB);
 
 class DBHandler {
 
@@ -37,9 +42,37 @@ class DBHandler {
         return data;
     }
 
+    static async findAlbum(albumName) {
+        let data;
+        await albumsDB.findOneAsync({ title: albumName })
+        .then(album => {
+            data = album;
+        });
+        return data;
+    }
+
+    static async updateAlbum(album) {
+        let data;
+        await albumsDB.updateAsync({ _id: album._id}, album, {})
+        .then(album => {
+            data = album;
+        });
+        return data;
+    }
+
     static async getSongs() {
         let data;
         await songsDB.findAsync({})
+        .then(docs => {
+            // console.log(docs);
+            data = docs;
+        });
+        return data;
+    }
+
+    static async getAlbums() {
+        let data;
+        await albumsDB.findAsync({})
         .then(docs => {
             // console.log(docs);
             data = docs;

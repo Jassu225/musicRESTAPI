@@ -84,6 +84,13 @@ class RequestHandler {
         res.end();
     }
 
+    static async getAlbums(req, res) {
+        let albums = await BusinessLayer.getAlbums();
+        res.writeHead(200, headers);
+        res.write(JSON.stringify({albums}));
+        res.end();
+    }
+
     //static serving
     static getSong(req, res, fileName) {
         let fullPath = path.join(config.uploadsDir, fileName);

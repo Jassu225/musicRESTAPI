@@ -59,13 +59,13 @@ const Objects = {
   },
   album: function() {
     return {
-      artists: [String],
-      cover: String,
-      duration: Number,
-      songsList: [String],
-      title: String,
-      tracks: Number,
-      year: String
+      artists: ['unknown'],
+      cover: '/static/defaultCover.png',
+      duration: 0,
+      songsList: [],
+      title: 'unknown',
+      tracks: 0,
+      year: 'unknown'
     }
   }
 };

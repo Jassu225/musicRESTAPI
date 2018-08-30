@@ -32,17 +32,46 @@ class BusinessLayer {
         song.year = metadata.common.year ? metadata.common.year : song.year;
 
         // console.log(song);
-        console.log(await DBHandler.addSong(song));
+        await DBHandler.addSong(song);
+    }
+
+    static async addSongToAlbumDB(fileName, metaData) {
+        let album = await DBHandler.findAlbum(metaData.common.album ? metaData.common.album : 'unknown');
+        console.log(album);
+        if(album) {
+            album.songsList.push(fileName);
+            // atrists concatenation not working
+            metaData.common.artists ? album.artists.concat(metaData.common.artists): null;
+            metaData.format.duration ? album.duration +=  metaData.format.duration : song.duration;
+            album.tracks++;
+            await DBHandler.updateAlbum(album);
+        } else {
+            album = Objects.album();
+            album.artists =  metaData.common.artists ? metaData.common.artists: album.artists;
+            let picture = metaData.common.picture;
+            album.cover =  ( (picture && picture[0].data) ? `data:${picture[0].format};base64,${picture[0].data.toString('base64')}`: album.cover);
+            album.duration =  metaData.format.duration ? metaData.format.duration : album.duration;
+            album.songsList.push(fileName);
+            album.title = metaData.common.album ? metaData.common.album : album.title;
+            album.tracks++;
+            album.year = metaData.common.year ? metaData.common.year : album.year;
+            await DBHandler.addAlbum(album);
+        }
     }
 
     static async extractMetaAndAddToDB(fileName) {
         let metadata = await this.extractMetaData(fileName);
         // console.log(util.inspect(metadata, { showHidden: false, depth: null }));
         await this.addSongToDB(fileName, metadata);
+        await this.addSongToAlbumDB(fileName, metadata);
     }
 
     static async getSongs() {
         return await DBHandler.getSongs();
+    }
+
+    static async getAlbums() {
+        return await DBHandler.getAlbums();
     }
 }
 
