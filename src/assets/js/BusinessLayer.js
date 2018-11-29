@@ -5,6 +5,8 @@ const config = require('../../config');
 const path = require('path');
 const util = require('util');
 
+let currentSong = null;
+
 // const dbHandler = new DBHandler();
 
 class BusinessLayer {
@@ -33,6 +35,7 @@ class BusinessLayer {
         song.year = metadata.common.year ? metadata.common.year : song.year;
 
         // console.log(song);
+        currentSong = song;
         await DBHandler.addSong(song);
     }
 
@@ -43,7 +46,7 @@ class BusinessLayer {
             album.songsList.push(fileName);
             // atrists concatenation not working
             metaData.common.artists ? album.artists.concat(metaData.common.artists): null;
-            metaData.format.duration ? album.duration +=  metaData.format.duration : song.duration;
+            metaData.format.duration ? album.duration +=  metaData.format.duration : currentSong.duration;
             album.tracks++;
             await DBHandler.updateAlbum(album);
         } else {
