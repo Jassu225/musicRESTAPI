@@ -4,7 +4,9 @@ dist/
 npm-debug.log
 yarn-error.log
 uploads/*
+!uploads/.gitkeep 
 databases/*
+!databases/.gitkeep 
 
 # Editor directories and files
 .idea
