@@ -43,6 +43,6 @@ http.createServer(function (req, res) {
                 break;
         }
     }
-}).listen(config.port, () => {
+}).listen(process.env.PORT || config.port, () => {
     console.log(`Server is running on ${config.port}`);
 });
