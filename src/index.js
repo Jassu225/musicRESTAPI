@@ -4,6 +4,8 @@ const config = require('./config');
 const routes = require('./assets/js/routes');
 let RequestHandler = require('./assets/js/requsetHandler');
 
+const port = process.env.PORT || config.port;
+
 //function used to decode base64 string
 global.atob = require('atob');
 
@@ -43,6 +45,6 @@ http.createServer(function (req, res) {
                 break;
         }
     }
-}).listen(process.env.PORT || config.port, () => {
-    console.log(`Server is running on ${config.port}`);
+}).listen(port, () => {
+    console.log(`Server is running on ${port}`);
 });
