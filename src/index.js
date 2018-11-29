@@ -9,6 +9,8 @@ const port = process.env.PORT || config.port;
 //function used to decode base64 string
 global.atob = require('atob');
 
+console.log(__dirname);
+
 //create a server object:
 http.createServer(function (req, res) {
     // console.log(`${req.method} ${req.url}`);
