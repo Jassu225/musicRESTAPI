@@ -37,7 +37,7 @@ class BusinessLayer {
 
     static async addSongToAlbumDB(fileName, metaData) {
         let album = await DBHandler.findAlbum(metaData.common.album ? metaData.common.album : 'unknown');
-        console.log(album);
+        // console.log(album);
         if(album) {
             album.songsList.push(fileName);
             // atrists concatenation not working
@@ -61,7 +61,7 @@ class BusinessLayer {
 
     static async extractMetaAndAddToDB(fileName) {
         let metadata = await this.extractMetaData(fileName);
-        // console.log(util.inspect(metadata, { showHidden: false, depth: null }));
+        console.log(util.inspect(metadata, { showHidden: false, depth: null }));
         await this.addSongToDB(fileName, metadata);
         await this.addSongToAlbumDB(fileName, metadata);
     }
