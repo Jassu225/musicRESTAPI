@@ -175,7 +175,8 @@ class RequestHandler {
                 if(error) console.log(error);
                 fs.writeFile(
                     path.join(config.uploadsDir, fileName),
-                    new Buffer(data, 'base64'),
+                    // new Buffer(data, 'base64'),
+                    Buffer.from(data, 'base64'),
                     async function(error) {
                         if(error) console.log(error);
                         console.log('base64 to binary conversion completed');
