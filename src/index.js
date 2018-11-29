@@ -44,5 +44,5 @@ http.createServer(function (req, res) {
         }
     }
 }).listen(config.port, () => {
-    console.log(`Server is running on http://localhost:${config.port}`);
-}); //the server object listens on port 8080
+    console.log(`Server is running on ${config.port}`);
+});
