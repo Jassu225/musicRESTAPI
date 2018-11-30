@@ -122,6 +122,7 @@ class RequestHandler {
                   const ext = path.parse(fullPath).ext;
                   // if the file is found, set Content-type and send data
                   res.setHeader('Content-type', mimeType[ext] || 'text/plain' );
+                  res.setHeader('Cache-Control', 'public');
                   res.end(data);
                 }
             }
