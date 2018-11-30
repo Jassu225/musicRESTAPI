@@ -14,7 +14,7 @@ if (result.error) {
   throw result.error;
 }
 // console.log(result.parsed);
-// console.log(process.env.ENVIRONMENT);
+console.log(process.env.ENVIRONMENT);
 
 const headers = {
     // 'Access-Control-Allow-Origin': 'https://vue-music-player.herokuapp.com',
@@ -29,6 +29,8 @@ const headers = {
 if(process.env.ENVIRONMENT == "PRODUCTION") {
     headers["Access-Control-Allow-Origin"] = 'https://vue-music-player.herokuapp.com';
 }
+
+console.log(headers["Access-Control-Allow-Origin"]);
 
 // maps file extention to MIME types
 const mimeType = {
