@@ -1,21 +1,34 @@
-const util = require('util');
+// const util = require('util');
 const path = require('path');
-const Promise = require('bluebird');
-const qs = require('querystring');
+// const Promise = require('bluebird');
+// const qs = require('querystring');
 const fs = require('fs');
-const url = require('url');
+const dotenv = require('dotenv');
+// const url = require('url');
 const config = require('../../config');
-const Utils = require('./utils');
+// const Utils = require('./utils');
 const BusinessLayer = require('./BusinessLayer');
 
+const result = dotenv.config({ path: path.join(config.rootDir, "/process.env") }); 
+if (result.error) {
+  throw result.error;
+}
+// console.log(result.parsed);
+// console.log(process.env.ENVIRONMENT);
+
 const headers = {
-    'Access-Control-Allow-Origin': 'https://vue-music-player.herokuapp.com',
+    // 'Access-Control-Allow-Origin': 'https://vue-music-player.herokuapp.com',
+    'Access-Control-Allow-Origin': 'http://localhost:8080',
     'Access-Control-Allow-Methods': 'POST, GET',
-    'Access-Control-Allow-Credentials': true,
+    // 'Access-Control-Allow-Credentials': true,
     // 'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept",
     'Access-Control-Max-Age': 24*3600, // 1 day
     /** add other headers as per requirement */
 };
+
+if(process.env.ENVIRONMENT == "PRODUCTION") {
+    headers["Access-Control-Allow-Origin"] = 'https://vue-music-player.herokuapp.com';
+}
 
 // maps file extention to MIME types
 const mimeType = {
@@ -40,12 +53,12 @@ class RequestHandler {
     static store(chunk, res) {
         // console.log(chunk);
         if(chunk["isFirst"]) {
-            console.log(chunk["isFirst"]);
             this.storeInNewFile(chunk, res);
         } else {
-            console.log(chunk["isFirst"]);
             this.appendToExistingFile(chunk, res);
         }
+        // console.log(chunk["isFirst"]);
+        // console.log("Start: " + chunk["chunkStart"] + "  End: " + chunk["chunkEnd"]);
     }
 
     static storeInNewFile(chunk, res) {
@@ -95,7 +108,7 @@ class RequestHandler {
     //static serving
     static getSong(req, res, fileName) {
         let fullPath = path.join(config.uploadsDir, fileName);
-        console.log(fullPath);
+        // console.log(fullPath);
         fs.readFile(
             fullPath,
             function(err, data) {
@@ -135,7 +148,7 @@ class RequestHandler {
                 return;
             }
 
-            console.log(chunk["name"]);
+            // console.log(chunk["name"]);
             this.store(chunk, res); // decoding from base64 to binary using atob()
         });
     }
@@ -161,7 +174,7 @@ class RequestHandler {
                 return;
             }
 
-            console.log(file["name"]);
+            // console.log(file["name"]);
             this.convertToBinary(file["name"], res);
         });
     }
@@ -179,7 +192,7 @@ class RequestHandler {
                     Buffer.from(data, 'base64'),
                     async function(error) {
                         if(error) console.log(error);
-                        console.log('base64 to binary conversion completed');
+                        // console.log('base64 to binary conversion completed');
                         await BusinessLayer.extractMetaAndAddToDB(fileName);
                         res.writeHead(200, headers);
                         res.end('Added to db');
