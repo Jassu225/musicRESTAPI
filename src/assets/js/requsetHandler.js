@@ -27,10 +27,10 @@ const headers = {
 };
 
 if(process.env.ENVIRONMENT == "PRODUCTION") {
-    headers["Access-Control-Allow-Origin"] = 'https://vue-music-player.herokuapp.com';
+    headers["Access-Control-Allow-Origin"] = 'https://vue-music-player.herokuapp.com, http://vue-music-player.herokuapp.com';
 }
 
-console.log(headers["Access-Control-Allow-Origin"]);
+// console.log(headers["Access-Control-Allow-Origin"]);
 
 // maps file extention to MIME types
 const mimeType = {
@@ -41,8 +41,30 @@ const mimeType = {
     '.css': 'text/css',
     '.png': 'image/png',
     '.jpg': 'image/jpeg',
-    '.wav': 'audio/wav',
+    // audio MIME types
+    '.aac': 'audio/aac',
+    '.aif': 'audio/aiff',
+    '.aifc': 'audio/aiff',
+    '.aiff': 'audio/aiff',
+    '.au': 'audio/basic',
+    '.lsf': 'video/x-la-asf', // audio/video
+    '.lsx': 'video/x-la-asf', // audio/video
+    '.m4a': 'audio/m4a',
+    '.mid': 'audio/x-midi',
+    '.midi': 'audio/x-midi',
+    '.mp2': 'video/mpeg',
     '.mp3': 'audio/mpeg',
+    '.mpa': 'video/mpeg',
+    '.mpv2': 'video/mpeg',
+    '.ogg': 'application/ogg',
+    '.ra': 'audio/vnd.rn-realaudio',
+    '.ram': 'audio/vnd.rn-realaudio',
+    '.rmi': 'audio/mid',
+    '.rpm': 'audio/vnd.rn-realaudio',
+    '.snd': 'audio/basic',
+    '.wma': 'audio/x-ms-wma',
+    '.wav': 'audio/wav',
+    // end
     '.svg': 'image/svg+xml',
     '.pdf': 'application/pdf',
     '.doc': 'application/msword',
