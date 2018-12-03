@@ -27,7 +27,9 @@ const headers = {
 };
 
 if(process.env.ENVIRONMENT == "PRODUCTION") {
-    headers["Access-Control-Allow-Origin"] = 'https://vue-music-player.herokuapp.com, http://vue-music-player.herokuapp.com';
+    // Firefox, Chrome & Safari do not support multiple domains in Access-Control-Allow-Origin header
+    // headers["Access-Control-Allow-Origin"] = 'https://vue-music-player.herokuapp.com, http://vue-music-player.herokuapp.com';
+    headers["Access-Control-Allow-Origin"] = 'https://vue-music-player.herokuapp.com';
 }
 
 // console.log(headers["Access-Control-Allow-Origin"]);
